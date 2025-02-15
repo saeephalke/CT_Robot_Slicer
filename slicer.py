@@ -10,6 +10,15 @@ transform = tio.transforms.RescaleIntensity((0, 1))
 data = transform(data)
 data
 
+#creating a random vector 
+needle_vec = np.array([0, -0.5, 0.5])
+standard_i = np.array([1, 0, 0])
+needle_vec /= np.linalg.norm(needle_vec)
+norm_vec = np.cross(needle_vec, standard_i)
+print(norm_vec)
+point = np.array([0, 0, 0])
+
+
 # plane coordinate in needle frame
 render_image_W, render_image_H = 512, 512
 X, Y = np.meshgrid(np.arange(render_image_W), np.arange(render_image_H))
@@ -39,3 +48,5 @@ plane_pixel_values = plane_pixel_values.reshape(render_image_W, render_image_H)
 
 plt.imshow(plane_pixel_values)
 plt.show()
+
+
