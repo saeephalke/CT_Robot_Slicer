@@ -24,8 +24,9 @@ render_image_W, render_image_H = 512, 512
 X, Y = np.meshgrid(np.arange(render_image_W), np.arange(render_image_H))
 Y -= render_image_W // 2
 Z = np.zeros_like(X)
-X, Y, Z = X.flatten(), Y.flatten(), Z.flatten()
-plane_points = np.stack([X, Y, Z], axis=1) / 1000
+Z_slant = (-norm_vec[0] * X - norm_vec[1] * Y) / norm_vec[2]
+X, Y, Z, Z_slant= X.flatten(), Y.flatten(), Z.flatten(), Z_slant.flatten()
+plane_points = np.stack([X, Y, Z_slant], axis=1) / 1000
 
 # transform to volume frame
 V_T_N = np.array([[1, 0, 0, 0],
