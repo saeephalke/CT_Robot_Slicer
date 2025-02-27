@@ -24,7 +24,8 @@ render_image_W, render_image_H = 512, 512
 X, Y = np.meshgrid(np.arange(render_image_W), np.arange(render_image_H))
 Y -= render_image_W // 2
 Z = np.zeros_like(X)
-Z_slant = (-norm_vec[0] * X - norm_vec[1] * Y) / norm_vec[2]
+#TODO
+Z_slant = (-norm_vec[0] * X - norm_vec[1] * Y) / norm_vec[2] #make it so that it depends on the point
 X, Y, Z, Z_slant= X.flatten(), Y.flatten(), Z.flatten(), Z_slant.flatten()
 plane_points = np.stack([X, Y, Z_slant], axis=1) / 1000
 
