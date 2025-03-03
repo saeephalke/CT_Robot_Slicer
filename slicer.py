@@ -11,12 +11,12 @@ data = transform(data)
 data
 
 #creating a random vector 
-needle_vec = np.array([0, 0.5, 0.25]) #needle as a vector
+needle_vec = np.array([0, 0.5, 0]) #needle as a vector
 standard_i = np.array([1, 0, 0])
 needle_vec /= np.linalg.norm(needle_vec)
 norm_vec = np.cross(needle_vec, standard_i)
 print(norm_vec)
-point = np.array([0, 0, 0]) #position of the needle
+point = np.array([0, 0.2, 0.15]) #position of the needle
 
 
 # plane coordinate in needle frame
@@ -30,9 +30,9 @@ X, Y, Z, Z_slant= X.flatten(), Y.flatten(), Z.flatten(), Z_slant.flatten()
 plane_points = np.stack([X, Y, Z_slant], axis=1) / 1000
 
 # transform to volume frame
-V_T_N = np.array([[1, 0, 0, 0],
-                  [0, 1, 0, 0.1],
-                  [0, 0, 1, 0.15],
+V_T_N = np.array([[1, 0, 0, point[0]],
+                  [0, 1, 0, point[1]],
+                  [0, 0, 1, point[2]],
                   [0, 0, 0, 1]])
 
 plane_points = np.concatenate([plane_points, np.ones((plane_points.shape[0], 1))], axis=1)
