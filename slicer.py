@@ -3,21 +3,33 @@ import torchio as tio
 import numpy as np
 import matplotlib.pyplot as plt
 
+#values of the needle vector
+needle_vec_x = 0
+needle_vec_y = 0.5
+needle_vec_z = 0
+
+#coordinates of the points
+point_x = 0
+point_y = 0.2
+point_z = 0.25
+
+#collecting data
 data = tio.ScalarImage('data/00-P.mhd')
 transform = tio.transforms.Resample(1)
 data = transform(data)
 transform = tio.transforms.RescaleIntensity((0, 1))
 data = transform(data)
-data
 
-#creating a random vector 
-needle_vec = np.array([0, 0.5, 0]) #needle as a vector
-standard_i = np.array([1, 0, 0])
+#creating a vector for the needle (represents the angles)
+needle_vec = np.array([needle_vec_x, needle_vec_y, needle_vec_z]) #needle as a vector
 needle_vec /= np.linalg.norm(needle_vec)
-norm_vec = np.cross(needle_vec, standard_i)
+
+#creating a vector perpendicular to the x axis
+norm_vec = np.cross(needle_vec, [1, 0, 0])
 norm_vec /= np.linalg.norm(norm_vec)
-print(norm_vec)
-point = np.array([0, 0.2, 0.25]) #position of the needle
+
+#position of the needle
+point = np.array([point_x, point_y, point_z])
 
 
 # plane coordinate in needle frame
@@ -34,9 +46,9 @@ plane_points = np.stack([X, Y, Z_slant], axis=1) / 1000
 y_vec = np.cross(norm_vec, [1, 0 ,0])
 y_vec /= np.linalg.norm(y_vec)
 V_T_N = np.array([
-    [1, 0, 0, point[0]],  # X-axis (fixed)
-    [0, 1, 0, point[1]],  # Y-axis (up direction)
-    [0, 0, 1, point[2]],  # Z-axis (plane normal)
+    [1, 0, 0, point[0]],  # X-axis
+    [0, 1, 0, point[1]],  # Y-axis 
+    [0, 0, 1, point[2]],  # Z-axis
     [0, 0, 0, 1]   # Homogeneous row
 ])
 
