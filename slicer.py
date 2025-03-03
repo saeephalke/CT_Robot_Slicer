@@ -15,8 +15,9 @@ needle_vec = np.array([0, 0.5, 0]) #needle as a vector
 standard_i = np.array([1, 0, 0])
 needle_vec /= np.linalg.norm(needle_vec)
 norm_vec = np.cross(needle_vec, standard_i)
+norm_vec /= np.linalg.norm(norm_vec)
 print(norm_vec)
-point = np.array([0, 0.2, 0.15]) #position of the needle
+point = np.array([0, 0.2, 0.25]) #position of the needle
 
 
 # plane coordinate in needle frame
@@ -25,15 +26,19 @@ X, Y = np.meshgrid(np.arange(render_image_W), np.arange(render_image_H))
 Y -= render_image_W // 2
 Z = np.zeros_like(X)
 #TODO
-Z_slant = (-norm_vec[0] * X - norm_vec[1] * Y) / norm_vec[2] #make it so that it depends on the point
+Z_slant = point[2] - (norm_vec[0] * (X - point[0]) + norm_vec[1] * (Y - point[1])) / norm_vec[2]
 X, Y, Z, Z_slant= X.flatten(), Y.flatten(), Z.flatten(), Z_slant.flatten()
 plane_points = np.stack([X, Y, Z_slant], axis=1) / 1000
 
 # transform to volume frame
-V_T_N = np.array([[1, 0, 0, point[0]],
-                  [0, 1, 0, point[1]],
-                  [0, 0, 1, point[2]],
-                  [0, 0, 0, 1]])
+y_vec = np.cross(norm_vec, [1, 0 ,0])
+y_vec /= np.linalg.norm(y_vec)
+V_T_N = np.array([
+    [1, 0, 0, point[0]],  # X-axis (fixed)
+    [0, 1, 0, point[1]],  # Y-axis (up direction)
+    [0, 0, 1, point[2]],  # Z-axis (plane normal)
+    [0, 0, 0, 1]   # Homogeneous row
+])
 
 plane_points = np.concatenate([plane_points, np.ones((plane_points.shape[0], 1))], axis=1)
 plane_points_in_volume = np.einsum('ij,kj->ki', V_T_N, plane_points)[:,:3]
