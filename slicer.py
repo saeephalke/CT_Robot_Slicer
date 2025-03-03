@@ -34,10 +34,15 @@ point = np.array([point_x, point_y, point_z])
 
 # plane coordinate in needle frame
 render_image_W, render_image_H = 512, 512
+
+#X and Y planes are defaulted
 X, Y = np.meshgrid(np.arange(render_image_W), np.arange(render_image_H))
 Y -= render_image_W // 2
+
+#default flat Z plane
 Z = np.zeros_like(X)
-#TODO
+
+#Z plane parallel to i vector and needle vector
 Z_slant = point[2] - (norm_vec[0] * (X - point[0]) + norm_vec[1] * (Y - point[1])) / norm_vec[2]
 X, Y, Z, Z_slant= X.flatten(), Y.flatten(), Z.flatten(), Z_slant.flatten()
 plane_points = np.stack([X, Y, Z_slant], axis=1) / 1000
