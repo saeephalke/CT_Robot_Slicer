@@ -4,14 +4,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #values of the needle vector
-needle_vec_x = 0
+needle_vec_x = 0.5
 needle_vec_y = 0.5
-needle_vec_z = 0
+needle_vec_z = 0.2
 
 #coordinates of the points
 point_x = 0
 point_y = 0.2
-point_z = 0.25
+point_z = 0.15
 
 #collecting data
 data = tio.ScalarImage('data/00-P.mhd')
@@ -62,7 +62,8 @@ plane_points_in_volume = np.einsum('ij,kj->ki', V_T_N, plane_points)[:,:3]
 
 # sample value using nearest grid point
 volume_aabb = np.array([[0, 0, 0], data.shape[1:]])/1000
-plane_points_inside_volume_mask = np.logical_and(np.all(plane_points_in_volume > volume_aabb[0], axis=1), np.all(plane_points_in_volume < volume_aabb[1], axis=1))
+plane_points_inside_volume_mask = np.logical_and(np.all(plane_points_in_volume > volume_aabb[0], axis=1), 
+                                                 np.all(plane_points_in_volume < volume_aabb[1], axis=1))
 sample_indices = np.floor((plane_points_in_volume[plane_points_inside_volume_mask] * 1000))
 sample_values = data.tensor[0, sample_indices[:, 0], sample_indices[:, 1], sample_indices[:, 2]]
 
